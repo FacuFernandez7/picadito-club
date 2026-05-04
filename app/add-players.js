@@ -35,6 +35,7 @@ export default function AddPlayersScreen() {
   const [inputName, setInputName] = useState('');
   const [selectedLogo, setSelectedLogo] = useState(null);
   const [search, setSearch] = useState('');
+  const [editingIndex, setEditingIndex] = useState(null);
   const inputRef = useRef(null);
 
   const filteredLogos = logos.filter(l =>
@@ -42,8 +43,19 @@ export default function AddPlayersScreen() {
   );
 
   function openModal() {
+    setEditingIndex(null);
     setInputName('');
     setSelectedLogo(null);
+    setSearch('');
+    setModalVisible(true);
+  }
+
+  function openEditModal(index) {
+    const player = players[index];
+    const matchedLogo = player.logo ? logos.find(l => l.logo === player.logo) ?? null : null;
+    setEditingIndex(index);
+    setInputName(player.name);
+    setSelectedLogo(matchedLogo);
     setSearch('');
     setModalVisible(true);
   }
@@ -58,11 +70,20 @@ export default function AddPlayersScreen() {
       Alert.alert('Nombre inválido', 'Escribí un nombre antes de agregar.');
       return;
     }
-    if (players.map(p => p.name.toLowerCase()).includes(name.toLowerCase())) {
+    const duplicate = players.some(
+      (p, i) => p.name.toLowerCase() === name.toLowerCase() && i !== editingIndex
+    );
+    if (duplicate) {
       Alert.alert('Repetido', `"${name}" ya está en la lista.`);
       return;
     }
-    setPlayers(prev => [...prev, { name, logo: selectedLogo?.logo ?? null }]);
+    if (editingIndex !== null) {
+      setPlayers(prev => prev.map((p, i) =>
+        i === editingIndex ? { name, logo: selectedLogo?.logo ?? null } : p
+      ));
+    } else {
+      setPlayers(prev => [...prev, { name, logo: selectedLogo?.logo ?? null }]);
+    }
     setModalVisible(false);
   }
 
@@ -111,12 +132,17 @@ export default function AddPlayersScreen() {
             renderItem={({ item, index }) => (
               <TouchableOpacity
                 style={styles.playerRow}
-                onPress={() => removePlayer(index)}
+                onPress={() => openEditModal(index)}
                 activeOpacity={0.7}
               >
                 <Image source={item.logo ?? DEFAULT_LOGO} style={styles.playerLogo} resizeMode="contain" />
                 <Text style={styles.playerName}>{item.name}</Text>
-                <Text style={styles.removeIcon}>✕</Text>
+                <TouchableOpacity
+                  onPress={() => removePlayer(index)}
+                  hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                >
+                  <Text style={styles.removeIcon}>✕</Text>
+                </TouchableOpacity>
               </TouchableOpacity>
             )}
             ListEmptyComponent={
@@ -156,13 +182,13 @@ export default function AddPlayersScreen() {
           <Pressable style={styles.modalBackdrop} onPress={cancelModal} />
 
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Agregar jugador</Text>
+            <Text style={styles.modalTitle}>{editingIndex !== null ? 'Editar jugador' : 'Agregar jugador'}</Text>
 
             <TextInput
               ref={inputRef}
               style={styles.modalInput}
               placeholder="Nombre del jugador"
-              placeholderTextColor="#2E4255"
+              placeholderTextColor="#FFFFFF"
               value={inputName}
               onChangeText={setInputName}
               onSubmitEditing={() => inputRef.current?.blur()}
@@ -178,7 +204,7 @@ export default function AddPlayersScreen() {
             <TextInput
               style={styles.searchInput}
               placeholder="Buscar equipo..."
-              placeholderTextColor="#2E4255"
+              placeholderTextColor="#FFFFFF"
               value={search}
               onChangeText={setSearch}
               returnKeyType="search"
@@ -287,11 +313,11 @@ const styles = StyleSheet.create({
   },
   playerBadgeText: { fontSize: 12, fontWeight: 'bold', color: '#3FD0C9' },
   playerName: { flex: 1, fontSize: 15, color: '#D4E8F7', fontWeight: '500' },
-  removeIcon: { fontSize: 12, color: '#1E3347', paddingLeft: 8 },
+  removeIcon: { fontSize: 12, color: '#FFFFFF', paddingLeft: 8 },
   emptyState: { alignItems: 'center', paddingVertical: 48, marginTop: 48 },
   emptyIcon: { fontSize: 44, marginBottom: 12 },
   emptyText: { fontSize: 16, color: '#5B7B96', marginBottom: 4 },
-  emptySubtext: { fontSize: 13, color: '#2E4255' },
+  emptySubtext: { fontSize: 13, color: '#FFFFFF' },
   startBtn: {
     backgroundColor: '#3FD0C9',
     borderRadius: 14,
@@ -306,7 +332,7 @@ const styles = StyleSheet.create({
     borderColor: '#1E3347',
   },
   startBtnText: { color: '#0B1F2E', fontSize: 16, fontWeight: 'bold' },
-  startBtnTextDisabled: { color: '#2E4255' },
+  startBtnTextDisabled: { color: '#FFFFFF' },
   // Modal
   modalOverlay: {
     flex: 1,

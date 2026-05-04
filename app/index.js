@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontSize: 15,
-    color: '#2E4255',
+    color: '#FFFFFF',
     textAlign: 'center',
   },
   actions: {
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   continueCardSub: {
     fontSize: 13,
-    color: '#2E4255',
+    color: '#FFFFFF',
   },
   continueArrow: {
     fontSize: 28,
@@ -144,6 +144,6 @@ const styles = StyleSheet.create({
     color: '#0B1F2E',
   },
   newBtnTextSecondary: {
-    color: '#2E4255',
+    color: '#FFFFFF',
   },
 });

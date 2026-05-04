@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
   },
   headerSub: {
     fontSize: 12,
-    color: '#2E4255',
+    color: '#FFFFFF',
     marginTop: 3,
   },
   exitBtn: {
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
   },
   byeText: {
     fontSize: 14,
-    color: '#2E4255',
+    color: '#FFFFFF',
     fontStyle: 'italic',
   },
   matchupCardHeader: {
@@ -515,7 +515,7 @@ const styles = StyleSheet.create({
     width: 48,
     fontSize: 10,
     fontWeight: '700',
-    color: '#2E4255',
+    color: '#FFFFFF',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -543,7 +543,7 @@ const styles = StyleSheet.create({
   aggregateLabel: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#2E4255',
+    color: '#FFFFFF',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -602,7 +602,7 @@ const styles = StyleSheet.create({
   singleVsText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#2E4255',
+    color: '#FFFFFF',
   },
   tapHint: {
     fontSize: 11,
@@ -686,7 +686,7 @@ const styles = StyleSheet.create({
   },
   championSub: {
     fontSize: 14,
-    color: '#2E4255',
+    color: '#FFFFFF',
     marginBottom: 48,
   },
   newTournamentBtn: {

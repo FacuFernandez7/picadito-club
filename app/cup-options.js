@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   cardNote: {
     fontSize: 11,
-    color: '#2E4255',
+    color: '#FFFFFF',
     fontStyle: 'italic',
   },
   arrow: {

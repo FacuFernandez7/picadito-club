@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { BlurView } from 'expo-blur';
 import {
   View,
   Text,
@@ -232,7 +233,7 @@ export default function LeagueScreen() {
             )}
           </View>
         ) : (
-          <View style={styles.standingsContainer}>
+          <BlurView intensity={55} tint="dark" style={styles.standingsContainer}>
             <View style={styles.standingsHeader}>
               <Text style={styles.standingsHeaderPos}>#</Text>
               <Text style={styles.standingsHeaderName}>Jugador</Text>
@@ -260,7 +261,7 @@ export default function LeagueScreen() {
                 <Text style={styles.newTournamentBtnText}>Nuevo torneo</Text>
               </TouchableOpacity>
             )}
-          </View>
+          </BlurView>
         )}
 
         <ScoreModal
@@ -308,7 +309,7 @@ const styles = StyleSheet.create({
   },
   headerSub: {
     fontSize: 13,
-    color: '#2E4255',
+    color: '#FFFFFF',
     marginTop: 2,
   },
   exitBtn: {
@@ -335,7 +336,7 @@ const styles = StyleSheet.create({
   },
   progressLabel: {
     fontSize: 12,
-    color: '#2E4255',
+    color: '#FFFFFF',
   },
   progressPct: {
     fontSize: 12,
@@ -371,7 +372,7 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#2E4255',
+    color: '#FFFFFF',
   },
   tabTextActive: {
     color: '#3FD0C9',
@@ -394,7 +395,7 @@ const styles = StyleSheet.create({
   matchLabel: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#2E4255',
+    color: '#FFFFFF',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     marginBottom: 10,
@@ -448,11 +449,11 @@ const styles = StyleSheet.create({
   scorePillVs: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#2E4255',
+    color: '#FFFFFF',
   },
   matchTapHint: {
     fontSize: 11,
-    color: '#1E3347',
+    color: '#FFFFFF',
     textAlign: 'center',
     marginTop: 8,
   },
@@ -494,6 +495,13 @@ const styles = StyleSheet.create({
   // Standings
   standingsContainer: {
     flex: 1,
+    marginHorizontal: 12,
+    marginTop: 12,
+    marginBottom: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
   },
   standingsHeader: {
     flexDirection: 'row',
@@ -506,7 +514,7 @@ const styles = StyleSheet.create({
     width: 28,
     fontSize: 11,
     fontWeight: '700',
-    color: '#2E4255',
+    color: '#FFFFFF',
     textAlign: 'center',
     textTransform: 'uppercase',
   },
@@ -514,7 +522,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 11,
     fontWeight: '700',
-    color: '#2E4255',
+    color: '#FFFFFF',
     paddingLeft: 8,
     textTransform: 'uppercase',
   },
@@ -522,7 +530,7 @@ const styles = StyleSheet.create({
     width: 32,
     fontSize: 11,
     fontWeight: '700',
-    color: '#2E4255',
+    color: '#FFFFFF',
     textAlign: 'center',
     textTransform: 'uppercase',
   },
@@ -541,7 +549,7 @@ const styles = StyleSheet.create({
     width: 28,
     fontSize: 14,
     fontWeight: '600',
-    color: '#2E4255',
+    color: '#FFFFFF',
     textAlign: 'center',
   },
   standingPosLeader: {
