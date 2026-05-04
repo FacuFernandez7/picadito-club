@@ -2,13 +2,17 @@ import { useState, useMemo } from 'react';
 import {
   View,
   Text,
+  Image,
   FlatList,
   TouchableOpacity,
   StyleSheet,
   Alert,
   SafeAreaView,
+  ImageBackground,
 } from 'react-native';
 import { router } from 'expo-router';
+
+const DEFAULT_LOGO = require('../assets/images/default_logo.png');
 import { useTournament } from '../context/TournamentContext';
 import { computeStandings } from '../utils/league';
 import ScoreModal from '../components/ScoreModal';
@@ -44,6 +48,8 @@ export default function LeagueScreen() {
       away: match.away,
       homeScore: match.played ? match.homeScore : null,
       awayScore: match.played ? match.awayScore : null,
+      homeLogo: state.playerLogos?.[match.home] ?? null,
+      awayLogo: state.playerLogos?.[match.away] ?? null,
     });
   }
 
@@ -88,12 +94,15 @@ export default function LeagueScreen() {
       >
         <Text style={styles.matchLabel}>Partido {index + 1}</Text>
         <View style={styles.matchRow}>
-          <Text
-            style={[styles.matchPlayer, homeWon && styles.matchPlayerWinner]}
-            numberOfLines={1}
-          >
-            {item.home}
-          </Text>
+          <View style={styles.matchPlayerCell}>
+            <Image source={state.playerLogos?.[item.home] ?? DEFAULT_LOGO} style={styles.matchLogo} resizeMode="contain" />
+            <Text
+              style={[styles.matchPlayer, homeWon && styles.matchPlayerWinner]}
+              numberOfLines={1}
+            >
+              {item.home}
+            </Text>
+          </View>
           <View style={[styles.scorePill, item.played && styles.scorePillPlayed]}>
             {item.played ? (
               <Text style={styles.scorePillText}>
@@ -103,12 +112,15 @@ export default function LeagueScreen() {
               <Text style={styles.scorePillVs}>vs</Text>
             )}
           </View>
-          <Text
-            style={[styles.matchPlayer, styles.matchPlayerRight, awayWon && styles.matchPlayerWinner]}
-            numberOfLines={1}
-          >
-            {item.away}
-          </Text>
+          <View style={[styles.matchPlayerCell, styles.matchPlayerCellRight]}>
+            <Image source={state.playerLogos?.[item.away] ?? DEFAULT_LOGO} style={styles.matchLogo} resizeMode="contain" />
+            <Text
+              style={[styles.matchPlayer, styles.matchPlayerRight, awayWon && styles.matchPlayerWinner]}
+              numberOfLines={1}
+            >
+              {item.away}
+            </Text>
+          </View>
         </View>
         {!item.played && (
           <Text style={styles.matchTapHint}>Tocá para ingresar resultado</Text>
@@ -125,6 +137,7 @@ export default function LeagueScreen() {
         <Text style={[styles.standingPos, isLeader && styles.standingPosLeader]}>
           {index + 1}
         </Text>
+        <Image source={state.playerLogos?.[item.player] ?? DEFAULT_LOGO} style={styles.standingLogo} resizeMode="contain" />
         <Text
           style={[styles.standingName, isLeader && styles.standingNameLeader]}
           numberOfLines={1}
@@ -141,7 +154,8 @@ export default function LeagueScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <ImageBackground source={require('../assets/images/background.png')} style={styles.bg} resizeMode="cover">
+      <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
@@ -234,6 +248,18 @@ export default function LeagueScreen() {
               renderItem={renderStandingsItem}
               showsVerticalScrollIndicator={false}
             />
+            {roundComplete && isLastRound && (
+              <TouchableOpacity
+                style={styles.newTournamentBtn}
+                onPress={() => {
+                  dispatch({ type: 'RESET' });
+                  router.dismissAll();
+                }}
+                activeOpacity={0.85}
+              >
+                <Text style={styles.newTournamentBtnText}>Nuevo torneo</Text>
+              </TouchableOpacity>
+            )}
           </View>
         )}
 
@@ -241,6 +267,8 @@ export default function LeagueScreen() {
           visible={activeModal !== null}
           homePlayer={activeModal?.home ?? ''}
           awayPlayer={activeModal?.away ?? ''}
+          homePlayerLogo={activeModal?.homeLogo}
+          awayPlayerLogo={activeModal?.awayLogo}
           label={currentRound?.name ?? 'Resultado'}
           initialHome={activeModal?.homeScore}
           initialAway={activeModal?.awayScore}
@@ -248,14 +276,18 @@ export default function LeagueScreen() {
           onClose={() => setActiveModal(null)}
         />
       </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  bg: {
+    flex: 1,
+  },
   safe: {
     flex: 1,
-    backgroundColor: '#0B1F2E',
+    backgroundColor: 'transparent',
   },
   container: {
     flex: 1,
@@ -371,6 +403,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  matchPlayerCell: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  matchPlayerCellRight: {
+    flexDirection: 'row-reverse',
+  },
+  matchLogo: {
+    width: 20,
+    height: 20,
+  },
   matchPlayer: {
     flex: 1,
     fontSize: 15,
@@ -414,7 +459,7 @@ const styles = StyleSheet.create({
   // Advance button
   advanceBtn: {
     margin: 16,
-    marginBottom: 8,
+    marginBottom: 24,
     backgroundColor: '#3FD0C9',
     borderRadius: 14,
     paddingVertical: 17,
@@ -426,6 +471,19 @@ const styles = StyleSheet.create({
     borderColor: '#2DD4BF',
   },
   advanceBtnText: {
+    color: '#0B1F2E',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  newTournamentBtn: {
+    margin: 16,
+    marginBottom: 24,
+    backgroundColor: '#3FD0C9',
+    borderRadius: 14,
+    paddingVertical: 17,
+    alignItems: 'center',
+  },
+  newTournamentBtnText: {
     color: '#0B1F2E',
     fontSize: 16,
     fontWeight: 'bold',
@@ -490,12 +548,17 @@ const styles = StyleSheet.create({
     color: '#3FD0C9',
     fontWeight: 'bold',
   },
-  standingName: {
+  standingLogo: {
+    width: 22,
+    height: 22,
+    marginRight: 6,
+  },
+standingName: {
     flex: 1,
     fontSize: 15,
     fontWeight: '500',
     color: '#D4E8F7',
-    paddingLeft: 8,
+    paddingLeft: 2,
   },
   standingNameLeader: {
     fontWeight: 'bold',

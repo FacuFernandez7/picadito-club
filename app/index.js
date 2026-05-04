@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import { router } from 'expo-router';
+import { ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTournament } from '../context/TournamentContext';
 
 const TYPE_LABEL = { league: 'Liga', cup: 'Copa' };
@@ -17,11 +17,10 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <ImageBackground source={require('../assets/images/home.png')} style={styles.bg} resizeMode="cover">
+      <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
         <View style={styles.hero}>
-          <Text style={styles.emoji}>⚽</Text>
-          <Text style={styles.title}>Picadito Club</Text>
           <Text style={styles.tagline}>Organizá tu torneo entre amigos</Text>
         </View>
 
@@ -52,23 +51,28 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  bg: {
+    flex: 1,
+  },
   safe: {
     flex: 1,
-    backgroundColor: '#0B1F2E',
+    backgroundColor: 'transparent',
   },
   container: {
     flex: 1,
     paddingHorizontal: 28,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 56,
   },
   hero: {
     alignItems: 'center',
-    marginBottom: 60,
+    marginBottom: 24,
   },
   emoji: {
     fontSize: 72,

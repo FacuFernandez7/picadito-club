@@ -3,6 +3,7 @@ import {
   Modal,
   View,
   Text,
+  Image,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -10,10 +11,14 @@ import {
   Platform,
 } from 'react-native';
 
+const DEFAULT_LOGO = require('../assets/images/default_logo.png');
+
 export default function ScoreModal({
   visible,
   homePlayer,
   awayPlayer,
+  homePlayerLogo,
+  awayPlayerLogo,
   label,
   initialHome,
   initialAway,
@@ -57,7 +62,15 @@ export default function ScoreModal({
           {label ? <Text style={styles.label}>{label}</Text> : null}
 
           <View style={styles.matchRow}>
-            <Text style={styles.playerName} numberOfLines={1}>{homePlayer}</Text>
+            <View style={styles.playerCol}>
+              <Image
+                source={homePlayerLogo ?? DEFAULT_LOGO}
+                style={styles.playerLogo}
+                resizeMode="contain"
+              />
+              <Text style={styles.playerName} numberOfLines={1}>{homePlayer}</Text>
+            </View>
+
             <View style={styles.scoreInputs}>
               <TextInput
                 style={styles.scoreInput}
@@ -82,7 +95,15 @@ export default function ScoreModal({
                 selectTextOnFocus
               />
             </View>
-            <Text style={styles.playerName} numberOfLines={1}>{awayPlayer}</Text>
+
+            <View style={styles.playerCol}>
+              <Image
+                source={awayPlayerLogo ?? DEFAULT_LOGO}
+                style={styles.playerLogo}
+                resizeMode="contain"
+              />
+              <Text style={styles.playerName} numberOfLines={1}>{awayPlayer}</Text>
+            </View>
           </View>
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -132,9 +153,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  playerName: {
+  playerCol: {
     flex: 1,
-    fontSize: 14,
+    alignItems: 'center',
+    gap: 8,
+  },
+  playerLogo: {
+    width: 48,
+    height: 48,
+  },
+  playerName: {
+    fontSize: 13,
     fontWeight: '600',
     color: '#D4E8F7',
     textAlign: 'center',

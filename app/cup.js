@@ -2,13 +2,17 @@ import { useState } from 'react';
 import {
   View,
   Text,
+  Image,
   FlatList,
   TouchableOpacity,
   StyleSheet,
   Alert,
   SafeAreaView,
+  ImageBackground,
 } from 'react-native';
 import { router } from 'expo-router';
+
+const DEFAULT_LOGO = require('../assets/images/default_logo.png');
 import { useTournament } from '../context/TournamentContext';
 import {
   computeMatchupWinner,
@@ -96,7 +100,8 @@ export default function CupScreen() {
   // ─── Champion screen ───────────────────────────────────────────────────────
   if (state.cupFinished) {
     return (
-      <SafeAreaView style={styles.safe}>
+      <ImageBackground source={require('../assets/images/background.png')} style={styles.bg} resizeMode="cover">
+        <SafeAreaView style={styles.safe}>
         <View style={styles.championContainer}>
           <Text style={styles.championTrophy}>🏆</Text>
           <Text style={styles.championLabel}>¡Campeón!</Text>
@@ -115,7 +120,8 @@ export default function CupScreen() {
             <Text style={styles.newTournamentBtnText}>Nuevo torneo</Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </ImageBackground>
     );
   }
 
@@ -159,6 +165,8 @@ export default function CupScreen() {
               legType: 'leg1',
               homePlayer: matchup.home,
               awayPlayer: matchup.away,
+              homeLogo: state.playerLogos?.[matchup.home] ?? null,
+              awayLogo: state.playerLogos?.[matchup.away] ?? null,
               initialHome: matchup.leg1Played ? matchup.leg1HomeGoals : null,
               initialAway: matchup.leg1Played ? matchup.leg1AwayGoals : null,
             })
@@ -183,6 +191,8 @@ export default function CupScreen() {
               legType: 'leg2',
               homePlayer: matchup.away,
               awayPlayer: matchup.home,
+              homeLogo: state.playerLogos?.[matchup.away] ?? null,
+              awayLogo: state.playerLogos?.[matchup.home] ?? null,
               initialHome: matchup.leg2Played ? matchup.leg2HomeGoals : null,
               initialAway: matchup.leg2Played ? matchup.leg2AwayGoals : null,
             })
@@ -254,6 +264,8 @@ export default function CupScreen() {
               legType: 'single',
               homePlayer: matchup.home,
               awayPlayer: matchup.away,
+              homeLogo: state.playerLogos?.[matchup.home] ?? null,
+              awayLogo: state.playerLogos?.[matchup.away] ?? null,
               initialHome: scorePlayed ? matchup.homeScore : null,
               initialAway: scorePlayed ? matchup.awayScore : null,
             })
@@ -261,15 +273,18 @@ export default function CupScreen() {
           activeOpacity={0.75}
         >
           <View style={styles.singleRow}>
-            <Text
-              style={[
-                styles.singlePlayer,
-                matchup.winner === matchup.home && styles.singlePlayerWinner,
-              ]}
-              numberOfLines={1}
-            >
-              {matchup.home}
-            </Text>
+            <View style={styles.singlePlayerCell}>
+              <Image source={state.playerLogos?.[matchup.home] ?? DEFAULT_LOGO} style={styles.singleLogo} resizeMode="contain" />
+              <Text
+                style={[
+                  styles.singlePlayer,
+                  matchup.winner === matchup.home && styles.singlePlayerWinner,
+                ]}
+                numberOfLines={1}
+              >
+                {matchup.home}
+              </Text>
+            </View>
             <View style={[styles.singleScorePill, scorePlayed && styles.singleScorePillPlayed]}>
               {scorePlayed ? (
                 <Text style={styles.singleScoreText}>
@@ -279,16 +294,19 @@ export default function CupScreen() {
                 <Text style={styles.singleVsText}>vs</Text>
               )}
             </View>
-            <Text
-              style={[
-                styles.singlePlayer,
-                styles.singlePlayerRight,
-                matchup.winner === matchup.away && styles.singlePlayerWinner,
-              ]}
-              numberOfLines={1}
-            >
-              {matchup.away}
-            </Text>
+            <View style={[styles.singlePlayerCell, styles.singlePlayerCellRight]}>
+              <Image source={state.playerLogos?.[matchup.away] ?? DEFAULT_LOGO} style={styles.singleLogo} resizeMode="contain" />
+              <Text
+                style={[
+                  styles.singlePlayer,
+                  styles.singlePlayerRight,
+                  matchup.winner === matchup.away && styles.singlePlayerWinner,
+                ]}
+                numberOfLines={1}
+              >
+                {matchup.away}
+              </Text>
+            </View>
           </View>
           {!scorePlayed && (
             <Text style={styles.tapHint}>Tocá para ingresar resultado</Text>
@@ -331,7 +349,8 @@ export default function CupScreen() {
 
   // ─── Main render ───────────────────────────────────────────────────────────
   return (
-    <SafeAreaView style={styles.safe}>
+    <ImageBackground source={require('../assets/images/background.png')} style={styles.bg} resizeMode="cover">
+      <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
@@ -372,6 +391,8 @@ export default function CupScreen() {
           visible={activeModal !== null}
           homePlayer={activeModal?.homePlayer ?? ''}
           awayPlayer={activeModal?.awayPlayer ?? ''}
+          homePlayerLogo={activeModal?.homeLogo}
+          awayPlayerLogo={activeModal?.awayLogo}
           label={
             activeModal?.legType === 'leg1'
               ? 'Ida'
@@ -385,14 +406,18 @@ export default function CupScreen() {
           onClose={() => setActiveModal(null)}
         />
       </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  bg: {
+    flex: 1,
+  },
   safe: {
     flex: 1,
-    backgroundColor: '#0B1F2E',
+    backgroundColor: 'transparent',
   },
   container: {
     flex: 1,
@@ -532,6 +557,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  singlePlayerCell: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  singlePlayerCellRight: {
+    flexDirection: 'row-reverse',
+  },
+  singleLogo: {
+    width: 20,
+    height: 20,
+  },
   singlePlayer: {
     flex: 1,
     fontSize: 15,
@@ -609,7 +647,7 @@ const styles = StyleSheet.create({
   // Advance button
   advanceBtn: {
     margin: 16,
-    marginBottom: 8,
+    marginBottom: 24,
     backgroundColor: '#3FD0C9',
     borderRadius: 14,
     paddingVertical: 17,

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ImageBackground } from 'react-native';
 import { router } from 'expo-router';
 import { useTournament } from '../context/TournamentContext';
 
@@ -28,7 +28,8 @@ export default function CupOptionsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <ImageBackground source={require('../assets/images/background.png')} style={styles.bg} resizeMode="cover">
+      <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
           <Text style={styles.backBtnText}>← Volver</Text>
@@ -54,14 +55,18 @@ export default function CupOptionsScreen() {
           </TouchableOpacity>
         ))}
       </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  bg: {
+    flex: 1,
+  },
   safe: {
     flex: 1,
-    backgroundColor: '#0B1F2E',
+    backgroundColor: 'transparent',
   },
   container: {
     flex: 1,

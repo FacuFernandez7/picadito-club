@@ -8,6 +8,7 @@ const initialState = {
   active: false,
   type: null,           // 'league' | 'cup'
   players: [],
+  playerLogos: {},      // { [name]: assetId | null }
 
   // League
   leagueRounds: [],        // [{ roundNumber, name, matches: [{ id, home, away, homeScore, awayScore, played }] }]
@@ -37,6 +38,7 @@ function reducer(state, action) {
         ...state,
         active: true,
         players: action.players,
+        playerLogos: action.playerLogos ?? {},
         leagueRounds: action.rounds,
         leagueCurrentRound: 0,
         cupRounds: [],
@@ -50,6 +52,7 @@ function reducer(state, action) {
         ...state,
         active: true,
         players: action.players,
+        playerLogos: action.playerLogos ?? {},
         leagueRounds: [],
         leagueCurrentRound: 0,
         cupRounds: [action.firstRound],
