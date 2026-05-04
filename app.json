@@ -17,7 +17,8 @@
         "backgroundColor": "#0B1F2E"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.facuufernandez9.picaditoclub"
     },
     "web": {
       "output": "static",
@@ -30,7 +31,7 @@
         {
           "backgroundColor": "#0B1F2E",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 280,
+          "imageWidth": 200,
           "resizeMode": "contain",
           "dark": {
             "backgroundColor": "#0B1F2E",
@@ -42,6 +43,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "14bdcd3d-828e-4a1f-8731-a8470347f413"
+      }
     }
   }
 }

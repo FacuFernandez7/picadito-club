@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 28,
     justifyContent: 'flex-end',
-    paddingBottom: 56,
+    paddingBottom: 100,
   },
   hero: {
     alignItems: 'center',

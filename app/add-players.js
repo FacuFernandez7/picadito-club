@@ -1,30 +1,30 @@
-import { useState, useRef } from 'react';
+import { router } from 'expo-router';
+import { useRef, useState } from 'react';
 import {
-  View,
+  Alert,
+  Dimensions,
+  FlatList,
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
-  StyleSheet,
-  Alert,
-  Modal,
-  Image,
-  KeyboardAvoidingView,
-  Pressable,
-  Platform,
-  SafeAreaView,
-  ImageBackground,
-  Dimensions,
+  View,
 } from 'react-native';
+import logos from '../assets/images/logos/index';
+import { useTournament } from '../context/TournamentContext';
+import { generateFirstRound } from '../utils/bracket';
+import { generateLeagueRounds } from '../utils/league';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 // overlay paddingH (20*2) + card padding (20*2) + item margin (4*2) * 5 cols
 const LOGO_CELL = Math.floor((SCREEN_WIDTH - 40 - 40 - 40) / 5);
-import { router } from 'expo-router';
-import { useTournament } from '../context/TournamentContext';
-import { generateLeagueRounds } from '../utils/league';
-import { generateFirstRound } from '../utils/bracket';
-import logos from '../assets/images/logos/index';
 
 const DEFAULT_LOGO = require('../assets/images/default_logo.png');
 
@@ -147,7 +147,6 @@ export default function AddPlayersScreen() {
             )}
             ListEmptyComponent={
               <View style={styles.emptyState}>
-                <Text style={styles.emptyIcon}>👥</Text>
                 <Text style={styles.emptyText}>Sin jugadores todavía.</Text>
                 <Text style={styles.emptySubtext}>Necesitás al menos 2 para empezar.</Text>
               </View>
